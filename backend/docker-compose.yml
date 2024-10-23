@@ -1,0 +1,16 @@
+services:
+  test-db:
+    image: mysql
+    container_name: test-db
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: demouser
+      MYSQL_PASSWORD: 12345678
+    networks:
+      - some-network
+networks:
+  some-network:

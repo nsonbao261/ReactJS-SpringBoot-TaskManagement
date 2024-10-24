@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.taskmanagement.dto.request.task.UpdateTaskRequest;
 import com.example.taskmanagement.entities.Task;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.repositories.TaskRepository;
-import com.example.taskmanagement.request.task.UpdateTaskRequest;
 
 @Service
 public class TaskService {

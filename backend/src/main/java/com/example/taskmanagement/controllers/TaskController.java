@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskmanagement.dto.TaskDTO;
+import com.example.taskmanagement.dto.request.task.CreateTaskRequest;
+import com.example.taskmanagement.dto.request.task.UpdateTaskRequest;
+import com.example.taskmanagement.dto.response.ApiResponse;
 import com.example.taskmanagement.entities.Task;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.enums.Status;
-import com.example.taskmanagement.request.task.CreateTaskRequest;
-import com.example.taskmanagement.request.task.UpdateTaskRequest;
-import com.example.taskmanagement.response.ApiResponse;
 import com.example.taskmanagement.services.TaskService;
 import com.example.taskmanagement.services.UserService;
 

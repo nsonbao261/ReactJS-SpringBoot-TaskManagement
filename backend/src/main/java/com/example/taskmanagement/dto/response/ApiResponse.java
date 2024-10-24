@@ -1,4 +1,4 @@
-package com.example.taskmanagement.response;
+package com.example.taskmanagement.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

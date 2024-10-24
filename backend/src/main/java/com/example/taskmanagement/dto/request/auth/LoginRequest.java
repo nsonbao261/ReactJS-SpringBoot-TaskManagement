@@ -1,4 +1,4 @@
-package com.example.taskmanagement.request.auth;
+package com.example.taskmanagement.dto.request.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

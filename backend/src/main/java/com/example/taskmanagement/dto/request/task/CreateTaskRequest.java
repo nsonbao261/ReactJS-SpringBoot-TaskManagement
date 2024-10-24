@@ -1,4 +1,4 @@
-package com.example.taskmanagement.request.task;
+package com.example.taskmanagement.dto.request.task;
 
 import com.example.taskmanagement.enums.Priority;
 

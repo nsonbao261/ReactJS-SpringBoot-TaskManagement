@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Task> tasks;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private Set<CourseRegistration> courseRegistrations;
+
     @Override
     public String getUsername() {
         return email;

@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskmanagement.dto.TokenDTO;
 import com.example.taskmanagement.dto.UserDTO;
+import com.example.taskmanagement.dto.request.auth.LoginRequest;
+import com.example.taskmanagement.dto.request.auth.RegisterRequest;
+import com.example.taskmanagement.dto.response.ApiResponse;
 import com.example.taskmanagement.entities.User;
-import com.example.taskmanagement.request.auth.LoginRequest;
-import com.example.taskmanagement.request.auth.RegisterRequest;
-import com.example.taskmanagement.response.ApiResponse;
-import com.example.taskmanagement.services.AuthService;
+import com.example.taskmanagement.services.UserService;
 import com.example.taskmanagement.utils.JwtUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,17 +29,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
 
     private final ModelMapper modelMapper;
-    private final AuthService authService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     public AuthController(
             final ModelMapper modelMapper,
-            final AuthService authService,
+            final UserService userService,
             final PasswordEncoder passwordEncoder,
             final JwtUtil jwtUtil) {
 
-        this.authService = authService;
+        this.userService = userService;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -49,7 +49,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
         try {
 
-            final User existedUser = authService.findUserByEmail(request.getEmail());
+            final User existedUser = userService.findUserByEmail(request.getEmail());
             if (existedUser != null) {
                 return ResponseEntity.badRequest()
                         .body(new ApiResponse("Email Existed", null));
@@ -66,7 +66,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(
                             "User Created",
-                            modelMapper.map(authService.save(user), UserDTO.class)));
+                            modelMapper.map(userService.save(user), UserDTO.class)));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
         try {
-            final User user = authService.findUserByEmail(request.getEmail());
+            final User user = userService.findUserByEmail(request.getEmail());
             if (user == null) {
                 return ResponseEntity.badRequest()
                         .body(new ApiResponse("User Not Found", null));

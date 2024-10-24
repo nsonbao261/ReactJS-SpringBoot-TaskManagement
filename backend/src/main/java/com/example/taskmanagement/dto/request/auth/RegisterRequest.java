@@ -1,4 +1,4 @@
-package com.example.taskmanagement.request.auth;
+package com.example.taskmanagement.dto.request.auth;
 
 import org.hibernate.validator.constraints.UUID;
 

@@ -1,6 +1,5 @@
 package com.example.taskmanagement.dto.request.auth;
 
-import org.hibernate.validator.constraints.UUID;
 
 import com.example.taskmanagement.enums.Role;
 

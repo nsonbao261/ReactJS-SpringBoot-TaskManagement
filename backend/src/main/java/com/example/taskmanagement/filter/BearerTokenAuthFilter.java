@@ -2,6 +2,7 @@ package com.example.taskmanagement.filter;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.taskmanagement.utils.JwtUtil;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,5 +57,4 @@ public class BearerTokenAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
-
 }

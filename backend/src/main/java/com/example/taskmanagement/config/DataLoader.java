@@ -6,24 +6,29 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.taskmanagement.entities.Course;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.enums.Role;
+import com.example.taskmanagement.repositories.CourseRepository;
 import com.example.taskmanagement.repositories.UserRepository;
 
 @Configuration
 public class DataLoader implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataLoader(
             final UserRepository userRepository,
+            final CourseRepository courseRepository,
             final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void seedUserData() {
+    private void seedUserData() {
         userRepository.save(User.builder()
                 .firstName("Nguyen")
                 .lastName("Son Bao")
@@ -52,11 +57,54 @@ public class DataLoader implements CommandLineRunner {
                 .build());
     }
 
+    private void seedCourseData() {
+
+        courseRepository.save(Course.builder()
+                .courseName("Information Technology")
+                .description("This is Course Description")
+                .maxStudentNumber(120)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        courseRepository.save(Course.builder()
+                .courseName("Artificial Inteligence")
+                .description("This is Course Description")
+                .maxStudentNumber(120)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        courseRepository.save(Course.builder()
+                .courseName("Computer Science")
+                .description("This is Course Description")
+                .maxStudentNumber(100)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        courseRepository.save(Course.builder()
+                .courseName("System Security")
+                .description("This is Course Description")
+                .maxStudentNumber(100)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+        courseRepository.save(Course.builder()
+                .courseName("Computer Software Developer")
+                .description("This is Course Description")
+                .maxStudentNumber(100)
+                .createdAt(LocalDateTime.now())
+                .build());
+    }
+
     @Override
     public void run(String... args) {
 
         // User
-        seedUserData();
+        if (userRepository.findAll().isEmpty())
+            seedUserData();
+
+        // Course
+        if (courseRepository.findAll().isEmpty())
+            seedCourseData();
     }
 
 }

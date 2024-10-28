@@ -24,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long courseId;

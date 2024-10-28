@@ -38,12 +38,12 @@ public class User implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+    private String avatarUrl;
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private Set<Task> tasks;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "student", orphanRemoval = true)
     private Set<CourseRegistration> courseRegistrations;

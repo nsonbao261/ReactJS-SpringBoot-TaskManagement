@@ -11,21 +11,18 @@ import lombok.Data;
 @Data
 public class CreateTaskRequest {
 
-    @Schema(example = "Example Task 1", required = true)
-    private String taskName;
+    @Schema(example = "First Task", required = true)
+    public String taskName;
 
-    @Schema(example = "Example Description", required = false)
-    private String description;
+    @Schema(example = "Example Description")
+    public String description;
 
-    @Schema(example = "LOW", required = true)
-    private Priority priority;
+    @Schema(example = "HIGH", required = true)
+    public Priority priority;
 
-    @Schema(example = "2024-01-01", required = true)
-    private LocalDate plannedStartDate;
+    @Schema(example = "01-01-2025", required = true)
+    public LocalDate plannedCompletedDate;
 
-    @Schema(example = "2024-12-12", required = true)
-    private LocalDate plannedEndDate;
-
-    @Schema(example = "XXX-XXX-XXX", required = true)
-    private String userId;
+    @Schema(type = "integer", example = "1", required = true)
+    public Long courseId;
 }

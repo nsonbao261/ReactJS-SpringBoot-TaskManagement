@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskmanagement.dto.TokenDTO;
 import com.example.taskmanagement.dto.UserDTO;
+import com.example.taskmanagement.dto.request.auth.ChangePasswordRequest;
 import com.example.taskmanagement.dto.request.auth.LoginRequest;
 import com.example.taskmanagement.dto.request.auth.RegisterRequest;
 import com.example.taskmanagement.dto.response.ApiResponse;
@@ -90,14 +91,46 @@ public class AuthController {
             }
             final String accessToken = jwtUtil.generateToken(user);
             final TokenDTO tokenDto = new TokenDTO(
-                    accessToken,
-                    "refresh_token");
+                    user.getUserId().toString(),
+                    accessToken);
 
             return ResponseEntity.ok().body(new ApiResponse(
                     "User Login",
                     tokenDto));
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body(new ApiResponse("Internal Server Error", null));
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse> changePassword(@RequestBody ChangePasswordRequest request) {
+        try {
+            // Check If User Exist
+            User user = userService.findUserById(request.getUserId());
+
+            if (user == null) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse("User Not Found", null));
+            }
+
+            // Check current Password
+
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse("Wrong Password", null));
+            }
+
+            // Update User with new Password
+
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+            userService.save(user);
+
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse("Password Changed", null));
+        } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(new ApiResponse("Internal Server Error", null));
         }

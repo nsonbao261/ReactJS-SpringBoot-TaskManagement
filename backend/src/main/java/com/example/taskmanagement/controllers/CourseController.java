@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.taskmanagement.dto.CourseDTO;
@@ -23,7 +22,6 @@ import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.services.CourseService;
 import com.example.taskmanagement.services.UserService;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,7 +61,7 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new ApiResponse(
                             "Course Created",
-                            modelMapper.map(newCourse, CourseDTO.class)));
+                            modelMapper.map(courseService.createCourse(newCourse), CourseDTO.class)));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(new ApiResponse("Internal Server Error", null));
@@ -171,6 +169,17 @@ public class CourseController {
                         .body(new ApiResponse("Course Not Found", null));
             }
 
+            // Check If User Register Course
+            final List<CourseRegistration> existingRegistration = courseService
+                    .findCourseRegistrationByUserAndCourse(user, course);
+
+            if (!existingRegistration.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(
+                                "Course Is Already Registered",
+                                null));
+            }
+
             // Create and Save Course Register
 
             final CourseRegistration registration = CourseRegistration.builder()
@@ -193,9 +202,8 @@ public class CourseController {
 
     }
 
-    @GetMapping("/find-by-user/")
-    public ResponseEntity<ApiResponse> findCourseByUserId(
-            @Parameter(name = "userId", example = "d14b0d07-2b94-449c-bd2d-96efa454cf94", required = true) @RequestParam String userId) {
+    @GetMapping("/find-by-user/{userId}")
+    public ResponseEntity<ApiResponse> findCourseByUserId(@PathVariable String userId) {
 
         try {
 
@@ -224,6 +232,7 @@ public class CourseController {
         }
     }
 
+    @DeleteMapping("/delete-registration")
     public ResponseEntity<ApiResponse> deleteRegistration(@RequestBody DeleteRegistrationRequest request) {
         try {
             final String userId = request.getUserId();
@@ -238,7 +247,7 @@ public class CourseController {
             }
             // Check if course exist
 
-            final Course course = courseService.findCourseById(request.getCourseId());
+            final Course course = courseService.findCourseById(courseId);
 
             if (course == null) {
                 return ResponseEntity.badRequest()

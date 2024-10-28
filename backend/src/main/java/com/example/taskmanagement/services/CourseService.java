@@ -59,6 +59,7 @@ public class CourseService {
         final User user = registration.getStudent();
 
         return CourseRegistrationDTO.builder()
+                .userId(user.getUserId())
                 .courseId(course.getCourseId())
                 .courseName(course.getCourseName())
                 .description(course.getDescription())

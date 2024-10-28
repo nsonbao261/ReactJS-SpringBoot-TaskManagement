@@ -60,7 +60,7 @@ public class JwtUtil {
     public Boolean isTokenValid(String accessToken, UserDetails userDetails) {
         final String userEmail = extractEmail(accessToken);
         return (userEmail.equals(userDetails.getUsername())
-                && extractExpiration(accessToken).before(new Date()));
+                && extractExpiration(accessToken).after(new Date()));
     }
 
 }

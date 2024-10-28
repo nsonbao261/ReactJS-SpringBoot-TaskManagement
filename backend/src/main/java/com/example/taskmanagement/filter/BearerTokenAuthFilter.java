@@ -44,6 +44,7 @@ public class BearerTokenAuthFilter extends OncePerRequestFilter {
         final String userEmail = jwtUtil.extractEmail(accessToken);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
+
         if (jwtUtil.isTokenValid(accessToken, userDetails)) {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,

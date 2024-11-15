@@ -62,5 +62,4 @@ public class JwtUtil {
         return (userEmail.equals(userDetails.getUsername())
                 && extractExpiration(accessToken).after(new Date()));
     }
-
 }

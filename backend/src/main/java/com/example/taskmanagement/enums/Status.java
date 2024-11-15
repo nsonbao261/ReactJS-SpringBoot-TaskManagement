@@ -1,5 +1,5 @@
 package com.example.taskmanagement.enums;
 
 public enum Status {
-    PENDING, COMPLETED, CANCELED
+    PENDING, COMPLETED, CANCELED, PROGRESSING
 }

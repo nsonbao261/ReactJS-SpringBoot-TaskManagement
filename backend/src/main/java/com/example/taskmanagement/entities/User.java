@@ -1,15 +1,17 @@
 package com.example.taskmanagement.entities;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -19,15 +21,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import com.example.taskmanagement.enums.Gender;
 import com.example.taskmanagement.enums.Role;
 
-@Entity
+@Entity(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "user")
 public class User implements UserDetails {
 
     @Id
@@ -39,14 +42,15 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String avatarUrl;
+
     private Role role;
+    private Gender gender;
+    private LocalDate birthday;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "student", orphanRemoval = true)
-    private Set<CourseRegistration> courseRegistrations;
+    @OneToMany(mappedBy = "user")
+    private List<Project> projects;
 
     @Override
     public String getUsername() {

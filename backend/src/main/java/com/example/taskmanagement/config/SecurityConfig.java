@@ -45,7 +45,9 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/docs/swagger-ui/**",
-            "/api/auth/**" };
+            "/api/auth/**",
+            "/api/project/**",
+            "/api/upload/**" };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -53,6 +55,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .authorizeHttpRequests()
+                .requestMatchers("/api/auth/profile")
+                .authenticated()
                 .requestMatchers(WHILTE_LIST_URL)
                 .permitAll()
                 .anyRequest()

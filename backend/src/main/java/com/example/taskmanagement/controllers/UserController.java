@@ -16,6 +16,7 @@ import com.example.taskmanagement.dto.response.UserDTO;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.enums.Gender;
 import com.example.taskmanagement.enums.Role;
+import com.example.taskmanagement.exception.CustomException;
 import com.example.taskmanagement.services.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,81 +38,58 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse> findUserById(@PathVariable String userId) {
-        try {
-            final User user = userService.findUserById(userId);
+        final User user = userService.findUserById(userId);
 
-            if (user == null) {
-                return ResponseEntity.badRequest()
-                        .body(new ApiResponse("User Not Found", null));
-            }
-
-            return ResponseEntity.ok()
-                    .body(new ApiResponse(
-                            "User Found",
-                            modelMapper.map(user, UserDTO.class)));
-        } catch (Exception e) {
-            // TODO: handle exception
-            return ResponseEntity.internalServerError()
-                    .body(new ApiResponse("Internal Server Error", null));
+        if (user == null) {
+            throw new CustomException("User Not Found");
         }
+
+        return ResponseEntity.ok()
+                .body(new ApiResponse(
+                        "User Found",
+                        modelMapper.map(user, UserDTO.class)));
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<ApiResponse> updateUser(@PathVariable String userId,
             @RequestBody UpdateProfileRequest request) {
-        try {
-            final User user = userService.findUserById(userId);
+        final User user = userService.findUserById(userId);
 
-            if (user == null) {
-                return ResponseEntity.badRequest()
-                        .body(new ApiResponse("User Not Found", null));
-            }
+        if (user == null) {
+            throw new CustomException("User Not Found");
 
-            final User updatedUser = userService.updateExistingUser(user, request);
-
-            return ResponseEntity.ok()
-                    .body(new ApiResponse(
-                            "User Updated",
-                            modelMapper.map(updatedUser, UserDTO.class)));
-        } catch (Exception e) {
-            // TODO: handle exception
-            return ResponseEntity.internalServerError()
-                    .body(new ApiResponse("Internal Server Error", null));
         }
+
+        final User updatedUser = userService.updateExistingUser(user, request);
+
+        return ResponseEntity.ok()
+                .body(new ApiResponse(
+                        "User Updated",
+                        modelMapper.map(updatedUser, UserDTO.class)));
+
     }
 
     @GetMapping("/")
     public ResponseEntity<ApiResponse> findAllUser() {
-        try {
-            final List<User> users = userService.findAllUser();
+        final List<User> users = userService.findAllUser();
 
-            return ResponseEntity.ok()
-                    .body(new ApiResponse(
-                            "Users found",
-                            users.stream().map(
-                                    user -> modelMapper.map(user, UserDTO.class))));
-        } catch (Exception e) {
-            // TODO: handle exception
-            return ResponseEntity.internalServerError()
-                    .body(new ApiResponse("Internal Server Error", null));
-        }
+        return ResponseEntity.ok()
+                .body(new ApiResponse(
+                        "Users found",
+                        users.stream().map(
+                                user -> modelMapper.map(user, UserDTO.class))));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse> findByRole(
+    public ResponseEntity<ApiResponse> searchUser(
             @RequestParam(required = false) Role role,
             @RequestParam(required = false) Gender gender) {
-        try {
-            final List<User> users = userService.findUserByRoleAndGender(role, gender);
+        final List<User> users = userService.findUserByRoleAndGender(role, gender);
 
-            return ResponseEntity.ok()
-                    .body(new ApiResponse(
-                            "Users Found",
-                            users.stream().map(item -> modelMapper.map(item, UserDTO.class))));
-        } catch (Exception e) {
-            // TODO: handle exception
-            return ResponseEntity.internalServerError()
-                    .body(new ApiResponse("Internal Server Error", null));
-        }
+        return ResponseEntity.ok()
+                .body(new ApiResponse(
+                        "Users Found",
+                        users.stream().map(item -> modelMapper.map(item, UserDTO.class))));
+
     }
 }

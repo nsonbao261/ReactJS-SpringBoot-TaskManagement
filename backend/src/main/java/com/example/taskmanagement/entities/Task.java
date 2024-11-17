@@ -1,45 +1,48 @@
 package com.example.taskmanagement.entities;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.taskmanagement.enums.Priority;
 import com.example.taskmanagement.enums.Status;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Builder;
 
-@Entity(name = "projects")
+@Entity(name = "tasks")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Project {
-
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long projectId;
+    private Long taskId;
 
-    private String projectName;
+    private String taskName;
     private String description;
-    private LocalDateTime plannedDueTime;
-    private LocalDateTime actualDueTime;
 
     @Builder.Default
     private Status status = Status.PENDING;
+
+    private Priority priority;
+
+    private LocalDateTime plannedDueTime;
+
+    private LocalDateTime actualDueTime;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -47,10 +50,7 @@ public class Project {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(nullable = false)
-    private User user;
-
-    @OneToMany(mappedBy = "project")
-    private List<Task> tasks;
+    private Project project;
 }

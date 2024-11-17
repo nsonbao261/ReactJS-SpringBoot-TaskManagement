@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.taskmanagement.dto.request.auth.ChangePasswordRequest;
 import com.example.taskmanagement.dto.request.auth.LoginRequest;
 import com.example.taskmanagement.dto.request.auth.RegisterRequest;
-import com.example.taskmanagement.dto.request.auth.UpdateProfileRequest;
 import com.example.taskmanagement.dto.response.ApiResponse;
 import com.example.taskmanagement.dto.response.LoginDTO;
 import com.example.taskmanagement.dto.response.UserDTO;
@@ -13,19 +12,13 @@ import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.services.UserService;
 import com.example.taskmanagement.utils.JwtUtil;
 
-import io.micrometer.common.lang.NonNull;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-
-import java.time.LocalDateTime;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 

@@ -1,9 +1,11 @@
 package com.example.taskmanagement.config;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.taskmanagement.repositories.UserRepository;
+import com.example.taskmanagement.dto.response.ProjectDTO;
+import com.example.taskmanagement.dto.response.TaskDTO;
+import com.example.taskmanagement.entities.Project;
+import com.example.taskmanagement.entities.Task;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +38,23 @@ public class ApplicationConfig {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        modelMapper.addMappings(new PropertyMap<Project, ProjectDTO>() {
+            @Override
+            protected void configure() {
+                // TODO Auto-generated method stub
+                map().setUserId(source.getUser().getUserId());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<Task, TaskDTO>() {
+            @Override
+            protected void configure() {
+                // TODO Auto-generated method stub
+                map().setProjectId(source.getProject().getProjectId());
+            }
+        });
+
         return modelMapper;
     }
 

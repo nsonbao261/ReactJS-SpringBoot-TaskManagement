@@ -1,6 +1,7 @@
 package com.example.taskmanagement.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.example.taskmanagement.enums.Status;
 
@@ -14,4 +15,5 @@ public class ProjectDTO {
     private String description;
     private LocalDateTime plannedDueTime;
     private Status status;
+    private UUID userId;
 }

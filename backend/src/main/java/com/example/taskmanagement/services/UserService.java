@@ -2,6 +2,7 @@ package com.example.taskmanagement.services;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
 import com.example.taskmanagement.dto.request.auth.UpdateProfileRequest;
@@ -77,4 +78,7 @@ public class UserService {
 
         return userRepository.findAll(example);
     }
+
+
+    
 }

@@ -1,10 +1,5 @@
 package com.example.taskmanagement.controllers;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.taskmanagement.dto.request.projects.CreateProjectRequest;
 import com.example.taskmanagement.dto.request.projects.UpdateProjectRequest;
 import com.example.taskmanagement.dto.response.ApiResponse;
+import com.example.taskmanagement.dto.response.Pagination;
 import com.example.taskmanagement.dto.response.ProjectDTO;
 import com.example.taskmanagement.entities.Project;
 import com.example.taskmanagement.entities.User;
@@ -36,113 +32,147 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/api/projects")
 public class ProjectController {
 
-    private final ProjectService projectService;
-    private final UserService userService;
+        private final ProjectService projectService;
+        private final UserService userService;
 
-    public ProjectController(
-            final ProjectService projectService,
-            final UserService userService) {
-        this.userService = userService;
-        this.projectService = projectService;
-    }
-
-    @GetMapping("/{projectId}")
-    public ResponseEntity<ApiResponse> findProjectById(@PathVariable Long projectId) {
-
-        final Project foundProject = projectService.findProjectById(projectId);
-
-        // If project null, status bad request
-        if (foundProject == null) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponse("Project Not Found", null));
+        public ProjectController(
+                        final ProjectService projectService,
+                        final UserService userService) {
+                this.userService = userService;
+                this.projectService = projectService;
         }
 
-        // if project exist, status ok, map to dto
-        return ResponseEntity.ok()
-                .body(new ApiResponse("Project Found",
-                        projectService.convertToDTO(foundProject)));
-    }
+        @GetMapping("/{projectId}")
+        public ResponseEntity<ApiResponse> findProjectById(@PathVariable Long projectId) {
 
-    @GetMapping()
-    public ResponseEntity<ApiResponse> findAllProject(
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "1") int pageSize) {
+                final Project foundProject = projectService.findProjectById(projectId);
 
-        // Find All Projects
-        Page<Project> projects = projectService.findAllProject(pageNumber, pageSize);
+                // If project null, status bad request
+                if (foundProject == null) {
+                        return ResponseEntity.badRequest()
+                                        .body(new ApiResponse("Project Not Found", null));
+                }
 
-        Page<ProjectDTO> projectDTOs = projects.map(
-                item -> projectService.convertToDTO(item));
-
-        // Map and return data
-        return ResponseEntity.ok()
-                .body(new ApiResponse("Projects Found",
-                        projectService.convertToPaginationDTO(projectDTOs)));
-    }
-
-    @PostMapping()
-    public ResponseEntity<ApiResponse> createProject(@RequestBody CreateProjectRequest request) {
-
-        // Check if User Exist
-        final User user = userService.findUserById(request.getUserId());
-
-        if (user == null) {
-            throw new CustomException("User Not Found");
+                // if project exist, status ok, map to dto
+                return ResponseEntity.ok()
+                                .body(new ApiResponse("Project Found",
+                                                projectService.convertToDTO(foundProject)));
         }
 
-        // Save Project
-        final Project newProject = Project.builder()
-                .projectName(request.getProjectName())
-                .description(request.getDescription())
-                .plannedDueTime(request.getPlannedDueTime())
-                .user(user)
-                .build();
+        @GetMapping()
+        public ResponseEntity<ApiResponse> findAllProject(
+                        @RequestParam(defaultValue = "0") int pageNumber,
+                        @RequestParam(defaultValue = "12") int pageSize) {
 
-        final Project savedProject = projectService.save(newProject);
-        // Map and return data
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse("Project Created",
-                        projectService.convertToDTO(savedProject)));
-    }
+                // Find All Projects
+                Page<Project> projects = projectService.findAllProject(pageNumber, pageSize);
 
-    @PutMapping("/{projectId}")
-    public ResponseEntity<ApiResponse> updateProject(
-            @PathVariable Long projectId,
-            @RequestBody UpdateProjectRequest request) {
+                Page<ProjectDTO> projectDTOs = projects.map(
+                                item -> projectService.convertToDTO(item));
 
-        final Project foundProject = projectService.findProjectById(projectId);
-
-        // If project null, status bad request
-        if (foundProject == null) {
-            throw new CustomException("Project Not Found");
+                // Map and return data
+                return ResponseEntity.ok()
+                                .body(new ApiResponse("Projects Found",
+                                                projectService.convertToPaginationDTO(projectDTOs)));
         }
 
-        // Update Project
-        final Project updatedProject = projectService.updateExistingProject(foundProject, request);
+        @PostMapping()
+        public ResponseEntity<ApiResponse> createProject(@RequestBody CreateProjectRequest request) {
 
-        // if project exist, status ok, map to dto
-        return ResponseEntity.ok()
-                .body(new ApiResponse("Project Found",
-                        projectService.convertToDTO(updatedProject)));
-    }
+                // Check if User Exist
+                final User user = userService.findUserById(request.getUserId());
 
-    @DeleteMapping("/{projectId}")
-    public ResponseEntity<ApiResponse> deleteProject(
-            @PathVariable Long projectId) {
+                if (user == null) {
+                        throw new CustomException("User Not Found");
+                }
 
-        final Project foundProject = projectService.findProjectById(projectId);
+                // Save Project
+                final Project newProject = Project.builder()
+                                .projectName(request.getProjectName())
+                                .description(request.getDescription())
+                                .plannedDueTime(request.getPlannedDueTime())
+                                .user(user)
+                                .build();
 
-        // If project null, status bad request
-        if (foundProject == null) {
-            throw new CustomException("Project Not Found");
+                final Project savedProject = projectService.save(newProject);
+                // Map and return data
+                return ResponseEntity.status(HttpStatus.CREATED)
+                                .body(new ApiResponse("Project Created",
+                                                projectService.convertToDTO(savedProject)));
         }
 
-        // Delete Project and Return Data
+        @PutMapping("/{projectId}")
+        public ResponseEntity<ApiResponse> updateProject(
+                        @PathVariable Long projectId,
+                        @RequestBody UpdateProjectRequest request) {
 
-        projectService.deleteProjectById(projectId);
+                final Project foundProject = projectService.findProjectById(projectId);
 
-        return ResponseEntity.ok()
-                .body(new ApiResponse("Project Deleted", null));
-    }
+                // If project null, status bad request
+                if (foundProject == null) {
+                        throw new CustomException("Project Not Found");
+                }
+
+                // Update Project
+                final Project updatedProject = projectService.updateExistingProject(foundProject, request);
+
+                // if project exist, status ok, map to dto
+                return ResponseEntity.ok()
+                                .body(new ApiResponse("Project Found",
+                                                projectService.convertToDTO(updatedProject)));
+        }
+
+        @DeleteMapping("/{projectId}")
+        public ResponseEntity<ApiResponse> deleteProject(
+                        @PathVariable Long projectId) {
+
+                final Project foundProject = projectService.findProjectById(projectId);
+
+                // If project null, status bad request
+                if (foundProject == null) {
+                        throw new CustomException("Project Not Found");
+                }
+
+                // Delete Project and Return Data
+
+                projectService.deleteProjectById(projectId);
+
+                return ResponseEntity.ok()
+                                .body(new ApiResponse("Project Deleted", null));
+        }
+
+        @GetMapping("/search")
+        public ResponseEntity<ApiResponse> searchProject(
+                        @RequestParam(required = false) String projectName,
+                        @RequestParam(required = false) Status status,
+                        @RequestParam(required = false) String userId,
+                        @RequestParam(defaultValue = "0") int pageNumber,
+                        @RequestParam(defaultValue = "12") int pageSize) {
+
+                // Check if User exist
+                User user = null;
+
+                if (userId != null) {
+                        user = userService.findUserById(userId);
+                        if (user == null) {
+                                throw new CustomException("User Not Found");
+                        }
+                }
+
+                // Find Project
+
+                final Page<Project> projects = projectService.searchProject(projectName, status, user, pageNumber,
+                                pageSize);
+
+                // Map and return data
+
+                Page<ProjectDTO> projectDTOs = projects.map(item -> projectService.convertToDTO(item));
+
+                return ResponseEntity.ok()
+                                .body(new ApiResponse(
+                                                "Project Found",
+                                                projectService.convertToPaginationDTO(projectDTOs)));
+
+        }
 
 }

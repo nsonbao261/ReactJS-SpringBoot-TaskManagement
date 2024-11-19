@@ -77,7 +77,7 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<ApiResponse> findAllTasks(
             @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "1") int pageSize) {
+            @RequestParam(defaultValue = "12") int pageSize) {
 
         Page<TaskDTO> tasks = taskService.findAll(pageNumber, pageSize)
                 .map(object -> taskService.convertToDTO(object));
@@ -139,7 +139,7 @@ public class TaskController {
             @RequestParam(required = false) String taskName,
             @RequestParam(required = false) Long projectId,
             @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "1") int pageSize) {
+            @RequestParam(defaultValue = "12") int pageSize) {
 
         Project project = null;
         if (projectId != null) {

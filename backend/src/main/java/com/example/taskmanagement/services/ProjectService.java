@@ -3,9 +3,12 @@ package com.example.taskmanagement.services;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
 import com.example.taskmanagement.dto.request.projects.UpdateProjectRequest;
@@ -13,6 +16,7 @@ import com.example.taskmanagement.dto.response.Pagination;
 import com.example.taskmanagement.dto.response.ProjectDTO;
 import com.example.taskmanagement.entities.Project;
 import com.example.taskmanagement.entities.User;
+import com.example.taskmanagement.enums.Status;
 import com.example.taskmanagement.repositories.ProjectRepository;
 
 @Service
@@ -80,5 +84,29 @@ public class ProjectService {
                 projectPages.getSize(),
                 projectPages.getTotalElements(),
                 projectPages.getTotalPages());
+    }
+
+    public Page<Project> searchProject(
+            String projectName,
+            Status status,
+            User user,
+            int pageNumber,
+            int pageSize) {
+
+        Project projectExample = Project.builder()
+                .projectName(projectName)
+                .status(status)
+                .user(user)
+                .build();
+
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching()
+                .withIgnoreCase()
+                .withIgnoreNullValues()
+                .withStringMatcher(StringMatcher.CONTAINING);
+        Example<Project> example = Example.of(projectExample, exampleMatcher);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        return projectRepository.findAll(example, pageable);
     }
 }

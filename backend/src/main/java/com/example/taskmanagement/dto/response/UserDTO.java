@@ -2,13 +2,8 @@ package com.example.taskmanagement.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;
-
-import com.example.taskmanagement.entities.Project;
 import com.example.taskmanagement.enums.Gender;
 import com.example.taskmanagement.enums.Role;
-
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data

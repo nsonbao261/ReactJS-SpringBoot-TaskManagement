@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.example.taskmanagement.enums.Status;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,7 +51,4 @@ public class Project {
     @ManyToOne()
     @JoinColumn(nullable = false)
     private User user;
-
-    @OneToMany(mappedBy = "project")
-    private List<Task> tasks;
 }

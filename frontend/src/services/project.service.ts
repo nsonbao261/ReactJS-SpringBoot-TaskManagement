@@ -1,7 +1,8 @@
-import { IApiResponse, IProject } from "@/types";
+import { CreateProject } from "@/pages/Project";
+import { IApiResponse, ICreateProjectRequest, IProject } from "@/types";
 import { axiosClient } from "@/utils";
 
-export const projectService = {
+export const projectApi = {
     getProjectByUserId(userId?: string): Promise<IApiResponse<any>> {
         return axiosClient.get(`/projects/search`, {
             params: {
@@ -10,7 +11,11 @@ export const projectService = {
         })
     },
 
-    getProjectDetailById(projectId: number): Promise<IApiResponse<IProject>> {
+    getProjectDetailById(projectId: string): Promise<IApiResponse<IProject>> {
         return axiosClient.get(`/projects/${projectId}`)
+    },
+
+    CreateProject(data: ICreateProjectRequest): Promise<IApiResponse<IProject>> {
+        return axiosClient.post("/projects", data)
     }
 }

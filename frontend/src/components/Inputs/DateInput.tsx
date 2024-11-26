@@ -5,12 +5,12 @@ interface IDateInputProps {
     label: string,
     placeholder: string,
     register?: UseFormRegisterReturn,
-    value?: string,
-    errorMessage?: string
+    errorMessage?: string,
+    onChange?: (value: string) => void,
 }
 
 const DateInput = (props: IDateInputProps) => {
-    const { name, label, register, placeholder, errorMessage, value } = props;
+    const { name, label, register, placeholder, errorMessage, onChange } = props;
 
     return (
         <div>
@@ -20,7 +20,7 @@ const DateInput = (props: IDateInputProps) => {
             </label>
 
             <input {...register}
-                type="date" name={name} id={name} placeholder={placeholder} value={value}
+                type="date" name={name} id={name} placeholder={placeholder}
                 className="w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg p-2 outline-none focus:border-indigo-700" />
 
             {errorMessage &&

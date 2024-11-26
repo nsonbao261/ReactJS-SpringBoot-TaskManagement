@@ -6,3 +6,11 @@ export interface IProject {
     actualDueTime?: string;
     status: string;
 }
+
+
+export interface ICreateProjectRequest {
+    projectName: string;
+    description?: string;
+    plannedDueTime: Date;
+    userId?: string;
+}

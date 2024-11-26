@@ -1,5 +1,7 @@
 package com.example.taskmanagement.controllers;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.taskmanagement.dto.request.projects.CreateProjectRequest;
 import com.example.taskmanagement.dto.request.projects.UpdateProjectRequest;
 import com.example.taskmanagement.dto.response.ApiResponse;
-import com.example.taskmanagement.dto.response.Pagination;
 import com.example.taskmanagement.dto.response.ProjectDTO;
+import com.example.taskmanagement.dto.response.TaskDTO;
 import com.example.taskmanagement.entities.Project;
+import com.example.taskmanagement.entities.Task;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.enums.Status;
 import com.example.taskmanagement.exception.CustomException;
 import com.example.taskmanagement.services.ProjectService;
+import com.example.taskmanagement.services.TaskService;
 import com.example.taskmanagement.services.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,12 +38,15 @@ public class ProjectController {
 
         private final ProjectService projectService;
         private final UserService userService;
+        private final TaskService taskService;
 
         public ProjectController(
                         final ProjectService projectService,
-                        final UserService userService) {
+                        final UserService userService,
+                        final TaskService taskService) {
                 this.userService = userService;
                 this.projectService = projectService;
+                this.taskService = taskService;
         }
 
         @GetMapping("/{projectId}")
@@ -49,8 +56,7 @@ public class ProjectController {
 
                 // If project null, status bad request
                 if (foundProject == null) {
-                        return ResponseEntity.badRequest()
-                                        .body(new ApiResponse("Project Not Found", null));
+                        throw new CustomException("Project Not Found");
                 }
 
                 // if project exist, status ok, map to dto

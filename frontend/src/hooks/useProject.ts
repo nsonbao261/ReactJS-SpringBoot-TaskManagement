@@ -1,4 +1,4 @@
-import { projectService } from "@/services";
+import { projectApi } from "@/services";
 import { userInfoSelector } from "@/store/reducers";
 import { projectsSelector, setProjects } from "@/store/reducers/project.slice"
 import { useDispatch, useSelector } from "react-redux"
@@ -10,7 +10,7 @@ export const useProject = () => {
 
     const getProjectByUserId = async () => {
         console.log(userInfo)
-        await projectService.getProjectByUserId(userInfo?.userId).
+        await projectApi.getProjectByUserId(userInfo?.userId).
             then((response) => {
                 if (response && response.data) {
                     dispatch(setProjects(response.data.content))

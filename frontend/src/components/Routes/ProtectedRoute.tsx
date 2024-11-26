@@ -1,13 +1,15 @@
-import { COOKIE_KEY } from "@/constants/common"
-import { ReactNode } from "react";
-import { useCookies } from "react-cookie"
-import { Link } from "react-router-dom";
+import { userInfoSelector } from '@/store/reducers'
+import React, { ReactNode } from 'react'
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom';
+
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-
-    const [cookies, _] = useCookies([COOKIE_KEY.ACCESS_TOKEN]);
+    const userInfo = useSelector(userInfoSelector);
     return (
-        <div></div>
+        userInfo
+            ? children
+            : <Navigate to="/" />
     )
 }
 
